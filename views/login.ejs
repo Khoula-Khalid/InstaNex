@@ -1,0 +1,110 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Login</title>
+<style>
+  /* Form styling */
+  body{
+    background-color: #a2ddcd;
+  }
+  
+  .sty{
+    margin-top: 150px;
+    margin-bottom: 150px;
+    border-radius: 10px;
+    padding: 20px;
+    margin-left: 450px;
+    margin-right: 450px;
+    background-color: #00463c;
+    color: #ffc986;
+  }
+  .log {
+    text-align: center;
+  }
+
+  form {
+    margin-top: 30px;
+    text-align: center;
+  }
+
+  input[type="email"],
+  input[type="password"] {
+    padding: 10px;
+    margin: 5px;
+    width: 80%;
+    background-color: #00463c;
+    color:  #ffffff;
+  }
+
+  input[type="submit"] {
+    background-color:#ffc986;
+    color: #00463c;
+    cursor: pointer;
+    font-weight: bold;
+    padding: 10px;
+    margin: 5px;
+    width: 90%; 
+    border-radius: 10px;
+    border: none;
+  }
+
+  input[type="submit"]:hover {
+    color: rgba(224, 33, 33, 0.795);
+  }
+
+  /* Error message styling */
+  h4.message {
+    color: rgb(247, 17, 17);
+    text-align: center;
+    font: 0.8em sans-serif;
+  }
+
+  /* Link styling */
+  a {
+    display: block;
+    text-align: center;
+    margin-top: 20px;
+    color:  #ffffff;
+    text-decoration: none;
+    font-family: Arial, Helvetica, sans-serif;
+    font-style: italic;
+  }
+  .create-account {
+    color: #ffc986; /* Set the color to crimson */
+    font-style: italic;
+  }
+
+  a:hover{
+    color: #FF6347;
+    }
+
+</style>
+</head>
+<body>
+<div class="sty">
+<h1 class="log">InstaNex</h1>
+
+<%
+    if(typeof message !== 'undefined'){
+        %>
+            <h4 class="message"><%= message %></h4>
+        <%
+    }
+%>
+
+<form action="" method="POST">
+
+    <input type="email" placeholder="User Email" name="email" required>
+    <br><br>
+    <input type="password" placeholder="Password" name="password" required>
+    <br><br>
+    <input type="submit" value="Log in">
+</form>
+
+<a href="/forgot">Forget Password!</a>
+<a href="http://127.0.0.1:3000/register">No account? <span class="create-account">Create One!</span></a>
+</div>
+</body>
+</html>

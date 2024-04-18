@@ -1,0 +1,342 @@
+
+<%- include('layouts/header.ejs') %>
+
+<h2 class="mb-4">Hii, <%= user.name %></h2>
+
+<div class="row">
+    <div class="col-md-4"> 
+        <ul class="list-group">
+            <% if (users.length > 0) { %>
+                <% for (let i = 0; i < users.length; i++) { %>
+                    <li class="list-group-item user-show user-list" data-id="<%= users[i]['_id'] %>">
+                        <img src="<%= 'http://127.0.0.1:3000/'+users[i]['image'] %>" alt="" width="42px" height="42px" style="margin-right: 10px; border-radius: 50%;">
+                        <%= users[i]['name'] %>
+                        <div class="stat">
+                        <% 
+                        if (users[i]['is_online'] == 1) { 
+                            %>
+                            <sup class="online-status" id="<%= users[i]['_id'] %>-status">Online</sup>
+                        <% 
+                    } else { 
+                        %>
+                            <sup class="offline-status" id="<%= users[i]['_id'] %>-status">Offline</sup>
+                        <% 
+                    } 
+                    %>
+                </div>
+
+                    </li>
+                <% } %>
+            <% } %>
+        </ul>
+    </div>
+
+    <div class="col-md-8">
+
+        <h3 class="start-head"> Click to Start the chat </h3>
+        <div class="chat-section">
+
+            <div id="chat-container">
+            
+            </div>
+            <form action="" id="chat-form" enctype="multipart/form-data">
+             
+                <input type="text" name="message" placeholder="Enter Message" id="message" class="border" required>
+                <input type="submit" value="Send Message" class="btn">
+            </form>
+
+        </div>
+
+    </div>
+</div>
+
+  <!-- Modal -->
+  <div class="modal fade" id="deleteChatModel" tabindex="-1" role="dialog" aria-labelledby="exampleModalCenterTitle" aria-hidden="true">
+    <div class="modal-dialog modal-dialog-centered" role="document">
+      <div class="modal-content">
+        <div class="modal-header">
+          <h5 class="modal-title" id="exampleModalLongTitle">Delete Chat</h5>
+          <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+            <span aria-hidden="true">&times;</span>
+          </button>
+        </div>
+
+        <form id="delete-chat-form">
+        <div class="modal-body">
+            <input type="hidden" name="id" id="delete-message-id">
+          <p>Are you sure you want to delete the Message?</p>
+          <p><b id="delete-message"></b></p>
+        </div>
+        <div class="modal-footer">
+          <button type="button" class="btn btn-secondary" data-dismiss="modal">No</button>
+          <button type="submit" class="btn btn-danger">Yes</button>
+        </div>
+    </form>
+      </div>
+    </div>
+  </div>
+<style>
+    .user-show{
+  background-color: #00463c; 
+  border: 1px solid #221e1a;
+  font-size: 19px; 
+  cursor: pointer; 
+  color:#ffc986;
+}
+#chat-container{
+  background-color: #00463c;
+  width: 100%;
+  height: 450px;
+  margin-left: 20px;
+  overflow: scroll;
+}
+.start-head{
+  margin-left: 20px;
+}
+#chat-form{
+  margin-left: 20px;
+  margin-top: 4px;
+}
+.border{
+  width: 72%;
+  border-radius: 10px;
+  height: 45px;
+}
+.btn{
+  background-color: #ffc986;
+  border-radius: 10px;
+  color: #221e1a;
+}
+.chat-section{
+  display: none;
+}
+.online-status{
+  color: #00FF7F;
+}
+.offline-status{
+  color: #aaa2a2;
+}
+.stat{
+  margin-top: 0px;
+  margin-left: 60px;
+  margin-top: 7px;
+}
+.current-user-chat{
+  margin: 8px 20px;
+  margin-left: auto;
+  background-color: #ffc986;
+  color: black; 
+  padding: 4px 10px;
+  border-radius: 20px;
+  max-width: 70%;  
+  float: right;
+  clear: both;
+}
+.distance-user-chat{
+  margin: 8px 20px;
+  margin-right: auto;
+  background-color: #a2ddcd;
+  color: black;
+  padding: 4px 10px;
+  border-radius: 20px;
+  max-width: 70%;
+  float: left;
+  clear: both;
+    }
+.user-list.active {
+  background-color: #197265e7; 
+  border: none;
+  font-size: 19px; 
+  cursor: pointer; 
+  color:#ffc986;
+}
+.fa-trash{
+  color: #C70000;
+}
+</style>
+<script>
+
+    var sender_id = '<%= user._id %>';
+    var receiver_id;
+    var socket= io('/user-space', {
+        auth:{
+            token: '<%= user._id %>'
+        }
+    });
+
+
+    $(document).ready(function(){
+
+        $('.user-list').click(function(){
+
+              $('.user-list').removeClass('active');
+            
+             $(this).addClass('active');
+
+            var userId = $(this).attr('data-id');
+            receiver_id = userId;
+            
+            $('.start-head').hide();
+            $('.chat-section').show();
+
+            socket.emit('existsChat', { sender_id:sender_id, receiver_id:receiver_id });
+        });
+
+    });
+
+    //update user online status
+
+    socket.on('getOnlineUser', function(data){
+        $('#'+data.user_id+'-status').text('Online');
+        $('#'+data.user_id+'-status').removeClass('offline-status');
+        $('#'+data.user_id+'-status').addClass('online-status');
+    });
+
+     //update user offline status
+
+     socket.on('getOfflineUser', function(data){
+        $('#'+data.user_id+'-status').text('Offline');
+        $('#'+data.user_id+'-status').addClass('offline-status');
+        $('#'+data.user_id+'-status').removeClass('online-status');
+    });
+
+    //chat save of user
+    $('#chat-form').submit(function(event){
+    event.preventDefault();
+
+    var message = $('#message').val();
+
+    $.ajax({
+        url:'/save-chat',
+        type: 'POST',
+        data:{ sender_id:sender_id, receiver_id:receiver_id, message:message },
+        success:function(response){
+            if(response.success){
+                console.log(response.data.message);
+                $('#message').val('');
+                let chat = response.data.message;
+                let html = `
+                <div class="current-user-chat" id='`+response.data._id+`'>
+                <h5>`+chat+`
+                    <i class="fa fa-trash" aria-hidden="true" data-id='`+response.data._id+`' data-toggle="modal" data-target="#deleteChatModel"></i>
+                    </h5>
+                </div>
+                `;
+                // Append the 'html' content to the chat container
+                $('#chat-container').append(html);
+                socket.emit('newChat', response.data);
+
+                scrollChat();
+            }
+            else{
+                alert(data.msg); 
+            }
+        }
+    });
+});
+
+
+    socket.on('loadNewChat', function(data){
+        if(sender_id == data.receiver_id && receiver_id == data.sender_id ){
+        let html = `
+            <div class="distance-user-chat" id='`+data._id+`'>
+            <h5>`+data.message+`</h5>
+            </div>
+            `;
+            $('#chat-container').append(html);
+        }
+        scrollChat();
+        });
+
+        //load old chats
+
+        socket.on('loadChats', function(data){
+            $('#chat-container').html('');
+
+            var chats = data.chats;
+
+            let html = '';
+
+            for(let x = 0; x < chats.length; x++){
+
+                let addClass = '';
+                if(chats[x]['sender_id'] == sender_id){
+                    addClass = 'current-user-chat';
+                }
+                else{
+                    addClass = 'distance-user-chat';
+                }
+
+            html +=`
+            
+            <div class='`+addClass+`' id='`+chats[x]['_id']+`'>
+                <h5>`+chats[x]['message']+``;
+
+                if(chats[x]['sender_id'] == sender_id){
+                    html +=` <i class="fa fa-trash" aria-hidden="true" data-id='`+chats[x]['_id']+`' data-toggle="modal" data-target="#deleteChatModel"></i>`;
+                }
+                html +=`
+                    </h5>
+            </div>
+            `;
+        }
+
+        $('#chat-container').append(html);
+        scrollChat();
+
+        });
+
+        function scrollChat(){
+            $('#chat-container').animate({
+                scrollTop:$('#chat-container').offset().top + $('#chat-container')[0].scrollHeight
+            },0);
+        }
+
+        //delete chat box
+        $(document).on('click','.fa-trash', function(){
+           let msg = $(this).parent().text();
+           $('#delete-message').text(msg);
+           $('#delete-message-id').val($(this).attr('data-id'));
+        });
+
+        $('#delete-chat-form').submit(function(event){
+            event.preventDefault();
+
+            var id = $('#delete-message-id').val();
+
+        $.ajax({
+            url:'/delete-chat',
+            type: 'POST',
+            data: { id: id },
+            success:function(res){
+                if (res.success == true) {
+                    $('#' + id).remove();
+                    $('#deleteChatModel').modal('hide'); // Corrected modal ID
+                    socket.emit('chatDeleted', id);
+                } 
+                else {
+                    alert(res.msg);
+                }
+            },
+    
+        });
+    });
+
+        socket.on('ChatMessageDeleted', function(id){
+            $('#' + id).remove();
+        });
+
+        // Add an event listener to the file input element
+  document.getElementById('file').addEventListener('change', function() {
+      const reader = new FileReader();
+      reader.onload = function() {
+          const bytes = new Uint8Array(this.result);
+          socket.emit('image', bytes); // Emit the image bytes to the server
+      };
+      reader.readAsArrayBuffer(this.files[0]); // Read the selected file as an array buffer
+  }, false);
+
+
+</script>
+
+<%- include('layouts/footer.ejs') %>

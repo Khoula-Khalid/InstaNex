@@ -1,0 +1,132 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Forgot Password</title>
+  <script src="https://cdnjs.cloudflare.com/ajax/libs/socket.io/4.0.1/socket.io.js"></script>
+
+  <style>
+    body {
+      background-color: #a2ddcd;
+    }
+    .sty{
+        margin-top: 150px;
+        margin-bottom: 150px;
+        border-radius: 10px;
+        padding: 20px;
+        margin-left: 450px;
+        margin-right: 450px;
+        background-color: #00463c;
+        color: #ffc986;
+        align-items: center;
+    }
+    form {
+    margin-top: 30px;
+    text-align: center;
+  }
+  h1{
+    text-align: center;
+  }
+  .input {
+    padding: 10px;
+    margin: 5px;
+    width: 80%;
+    background-color: #00463c;
+    color:  #ffffff;
+  }
+  button[type="submit"] {
+    background-color:#ffc986;
+    color: #00463c;
+    cursor: pointer;
+    font-weight: bold;
+    padding: 8px;
+    margin: 5px;
+    width: 80%; 
+    border-radius: 10px;
+    border: none;
+  }
+
+  button[type="submit"]:hover {
+    color: rgba(224, 33, 33, 0.795);
+  }
+
+  p{
+    text-align: center;
+    font: 0.8em sans-serif;
+  }
+  a {
+    text-align: center;
+    display: block;
+    margin-top: 20px;
+    color:  #ffffff;
+    text-decoration: none;
+    font-family: Arial, Helvetica, sans-serif;
+    font-style: italic;
+  }
+  a:hover{
+    color: rgba(248, 47, 47, 0.795);
+  }
+  </style>
+
+</head>
+<body>
+    <div class="sty">
+    <h1>Change Password</h1>
+    <form action="/changePassword" method="POST">
+        <input class="input" type="email" name="email" placeholder="Enter email" required>
+        <input class="input" type="password" name="newPassword" placeholder="Enter new password" required>
+        <br><br>
+        <button type="submit">Change Password</button>
+    </form>
+    <a href="/views/login.ejs">Login!</a>
+    <%
+    if(typeof message !== 'undefined'){
+        %>
+            <p style="color: rgb(255, 255, 255);"><%= message %></p>
+        <%
+    }
+%>
+        
+
+
+
+<script>
+  document.getElementById('changePasswordForm').addEventListener('submit', async (event) => {
+      event.preventDefault();
+
+      const userId = document.getElementById('email').value;
+      const newPassword = document.getElementById('newPassword').value;
+
+      try {
+          const response = await fetch('/change-password', {
+              method: 'POST',
+              headers: {
+                  'Content-Type': 'application/json'
+              },
+              body: JSON.stringify({ email, newPassword })
+          });
+
+          const data = await response.json();
+          
+          // Check if the response indicates success
+          if (response.ok) {
+              // Display the message dynamically
+              const messageContainer = document.createElement('p');
+              messageContainer.textContent = data.message;
+              document.body.appendChild(messageContainer);
+          } else {
+              // Handle error response
+              console.error('Error changing password:', data.error);
+              alert('An error occurred. Please try again.');
+          }
+      } catch (error) {
+          console.error('Error changing password:', error);
+          alert('An error occurred. Please try again.');
+      }
+  });
+</script>
+</script>
+  </div>
+</body>
+</html>

@@ -1,0 +1,103 @@
+<!DOCTYPE html>
+<html lang="en">
+<div class="sty">
+<h1 class="log">Register</h1>
+
+<form action="" method="POST" enctype="multipart/form-data">
+
+    <input type="text" name="name" placeholder="Enter Name" required>
+    <br><br>
+    <input type="email" name="email" placeholder="Enter Email" required>
+    <br><br>
+    <input type="file" name="image" class="image" required>
+    <br><br>
+    <input type="password" name="password" placeholder="Enter Password" required>
+    <br><br>
+    <input type="submit" value="Register Me!">
+
+</form>
+
+<a href="/views/login.ejs">Login</a>
+
+<%
+    if(typeof message !== 'undefined'){
+        %>
+            <p style="color: rgb(255, 255, 255);"><%= message %></p>
+        <%
+    }
+%>
+</div>
+
+<style>
+    body{
+    background-color: #a2ddcd;
+  }
+  .sty{
+    margin-top: 100px;
+    margin-bottom: 130px;
+    border-radius: 10px;
+    padding: 20px;
+    margin-left: 450px;
+    margin-right: 450px;
+    background-color: #00463c;
+    color: #ffc986;
+  }
+  .log {
+    text-align: center;
+  }
+  form {
+    margin-top: 30px;
+    text-align: center;
+  }
+  input[type="email"],
+  input[type="password"],
+  input[type="text"],
+  input[type="image"] {
+    padding: 10px;
+    margin: 5px;
+    width: 80%;
+    background-color: #00463c;
+    color:  #ffffff;
+  }
+  input[type="submit"] {
+    background-color:#ffc986;
+    color: #00463c;
+    cursor: pointer;
+    font-weight: bold;
+    padding: 10px;
+    margin: 5px;
+    width: 80%; 
+    border-radius: 10px;
+    border: none;
+  }
+  input[type="submit"]:hover {
+    color: rgba(224, 33, 33, 0.795);
+  }
+  .image{
+    cursor: pointer;
+    width: 80%; 
+  }
+  a {
+    display: block;
+    text-align: center;
+    margin-top: 20px;
+    text-decoration: none;
+    background-color:#ffc986;
+    color: #00463c;
+    cursor: pointer;
+    font-weight: bold;
+    padding: 8px;
+    margin: 20px;
+    margin-left: 30px;
+    width: 75%; 
+    border-radius: 10px;
+    border: none;
+  }
+  a:hover{
+    color: rgba(224, 33, 33, 0.795);
+  }
+  p{
+    text-align: center;
+    font: 0.8em sans-serif;
+  }
+</style>
