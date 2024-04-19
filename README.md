@@ -23,7 +23,7 @@ InstaNex focuses on creating a secure and friendly space for online conversation
 4.	Go to the integrated terminal within VS Code or any code editor.
 5.	**Install dependencies:** In the integrated terminal navigate to the project folder if not already there.
 6.	And run command: **npm install**. This command reads the dependencies listed in package-lock.json and installs them in the node_modules folder. These dependencies are necessary for the application to function.
-7.	Then, in the integrated terminal, run the command: **npm start**
+7.	Then, in the integrated terminal, run the command: **nodemon app**
 8.	This will start the InstaNex application
 
 **Usage**
