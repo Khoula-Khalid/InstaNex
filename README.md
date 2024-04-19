@@ -18,7 +18,7 @@ InstaNex focuses on creating a secure and friendly space for online conversation
 **Installation**
 
 1.	**Clone the repository:** In a terminal window (Command Prompt), run the following command to clone the repository:
-**git clone https://github.com/your-username/instanex.git**
+**git clone https://github.com/Khoula-Khalid/InstaNex.git**
 3.	Launch Visual Studio Code or any code editor you use and open the cloned repository folder.
 4.	Go to the integrated terminal within VS Code or any code editor.
 5.	**Install dependencies:** In the integrated terminal navigate to the project folder if not already there.
