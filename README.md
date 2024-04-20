@@ -37,8 +37,3 @@ InstaNex focuses on creating a secure and friendly space for online conversation
 •	View user status and chat history.
 
 •	Delete chat conversations as needed.
-
-**License**
-
-This project is licensed under the MIT License.
-
